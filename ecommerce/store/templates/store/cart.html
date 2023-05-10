@@ -1,0 +1,129 @@
+{% extends 'store/main.html' %} 
+{% load static %} 
+{% block content %}
+
+<div class="breadcrumb-area">
+            <div class="container">
+                <div class="breadcrumb-content">
+                    <ul>
+                        <li><a href="{% url 'index' %}">Home</a></li>
+                        <li class="active">Shopping Cart</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Li's Breadcrumb Area End Here -->
+        <!--Shopping Cart Area Strat-->
+        <div class="Shopping-cart-area pt-60 pb-60">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <form action="#">
+                            <div class="table-content table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="li-product-remove">remove</th>
+                                            <th class="li-product-thumbnail">images</th>
+                                            <th class="cart-product-name">Product</th>
+                                            <th class="li-product-price">Unit Price</th>
+                                            <th class="li-product-quantity">Quantity</th>
+                                            <th class="li-product-subtotal">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in items %}
+                                        <tr>
+                                            <td class="li-product-remove"><a href="#"><i class="fa fa-times"></i></a>
+                                            </td>
+                                            <td class="li-product-thumbnail"><img
+                                                        src="{{item.product.ImageURL}}"
+                                                        alt="Li's Product Image"></td>
+                                            <td class="li-product-name">{{item.product.name}}</td>
+                                            <td class="li-product-price"><span class="amount">₦{{item.product.price|floatformat:2}}</span></td>
+                                            <td class="quantity">
+                                                <label>Quantity</label>
+                                                <div class="cart-plus-minus">
+                                                    <input class="cart-plus-minus-box quantity" value="{{item.quantity}}" type="text">
+                                                    <div class="dec qtybutton chng-quantity update-cart" data-product={{item.product.id}} data-action="remove"><i class="fa fa-angle-down"></i></div>
+                                                    <div class="inc qtybutton chng-quantity update-cart" data-product="{{item.product.id}}" data-action="add"><i class="fa fa-angle-up"></i></div>
+                                                </div>
+                                            </td>
+                                            <td class="product-subtotal"><span class="amount">₦{{item.get_total}}</span></td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-5 ml-auto">
+                                    <div class="cart-page-total">
+                                        <h2>Cart totals</h2>
+                                        <ul>
+                                            <li>Items <span>{{order.get_cart_items}}</span></li>
+                                            <li>Total <span>₦{{order.get_cart_total|floatformat:2}}</span></li>
+                                        </ul>
+                                        <a href="{% url 'checkout' %}">Proceed to checkout</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{% endblock content %}
+{% comment %} 
+<div class="row">
+    <div class="col-lg-12">
+        <div class="box-element">
+            <a href="{% url 'index' %}" class="btn btn-outline-dark">Continue Shopping</a>
+            <br>
+            <br>
+
+            <table class="table">
+                <tr>
+                    <th>
+                        <h5>Items: <strong>{{order.get_cart_items}}</strong></h5>
+                    </th>
+
+                    <th>
+                        <h5>Total: <strong>₦{{order.get_cart_total|floatformat:2}}</strong></h5>
+                    </th>
+
+                    <th>
+                        <a href="{% url 'checkout' %}" class="btn btn-success" style="float: right; margin: 5px;">Checkout</a>
+                    </th>
+                </tr>
+            </table>
+        </div>
+        <br>
+        <div class="box-element">
+            <div class="cart-row">
+                <div style="flex: 2;"></div>
+                <div style="flex: 2;"><strong>items</strong></div>
+                <div style="flex: 1;"><strong>Price</strong></div>
+                <div style="flex: 1;"><strong>Quantity</strong></div>
+                <div style="flex: 1;"><strong>Total</strong></div>
+            </div>
+            {% for item in items %}
+            <div class="cart-row">
+                <div style="flex: 2;"><img src="{{item.product.ImageURL}}" class="row-image"></div>
+                <div style="flex: 2;"><strong>{{item.product.name}}</strong></div>
+                <div style="flex: 1;"><strong>₦{{item.product.price|floatformat:2}}</strong></div>
+                <div style="flex: 1;">
+                    <p class="quantity">{{item.quantity}}</p>
+                    <div class="quantity">
+                        <img data-product={{item.product.id}} data-action="add" class="chng-quantity update-cart" src="{% static 'images/up.png' %}" alt="">
+
+                        <img src="{% static 'images/down.png' %}" alt="" data-product={{item.product.id}} data-action="remove" class="chng-quantity update-cart">
+                    </div>
+
+                </div>
+                <div style="flex: 1;"><strong>₦{{item.get_total}}</strong></div>
+            </div>
+            {%endfor%}
+        </div>
+    </div>
+</div> {% endcomment %}

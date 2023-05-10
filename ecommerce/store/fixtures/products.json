@@ -1,0 +1,122 @@
+[
+{
+    "model": "store.product",
+    "pk": 1,
+    "fields": {
+        "name": "Iced Cake",
+        "category": 4,
+        "price": "3000.00",
+        "description": "",
+        "digital": false,
+        "image": "Cake1_eryq3lg.JPG",
+        "created_at": "2023-05-07T17:14:12.309Z",
+        "updated_at": "2023-05-07T17:14:12.309Z",
+        "slug": null
+    }
+},
+{
+    "model": "store.product",
+    "pk": 2,
+    "fields": {
+        "name": "Cookie",
+        "category": 4,
+        "price": "1500.00",
+        "description": "",
+        "digital": false,
+        "image": "cake3.JPG",
+        "created_at": "2023-05-07T17:14:38.480Z",
+        "updated_at": "2023-05-07T17:14:38.480Z",
+        "slug": null
+    }
+},
+{
+    "model": "store.product",
+    "pk": 3,
+    "fields": {
+        "name": "Cup Cakes",
+        "category": 4,
+        "price": "1000.00",
+        "description": "",
+        "digital": false,
+        "image": "chocolatecake.JPG",
+        "created_at": "2023-05-07T17:15:24.272Z",
+        "updated_at": "2023-05-07T17:15:24.272Z",
+        "slug": null
+    }
+},
+{
+    "model": "store.product",
+    "pk": 4,
+    "fields": {
+        "name": "Dohgnught",
+        "category": 4,
+        "price": "1300.00",
+        "description": "",
+        "digital": false,
+        "image": "donought.JPG",
+        "created_at": "2023-05-07T17:17:41.527Z",
+        "updated_at": "2023-05-07T17:17:41.527Z",
+        "slug": "doghnught"
+    }
+},
+{
+    "model": "store.product",
+    "pk": 5,
+    "fields": {
+        "name": "Bisccuit",
+        "category": 4,
+        "price": "500.00",
+        "description": "",
+        "digital": false,
+        "image": "pie2.JPG",
+        "created_at": "2023-05-07T17:18:25.575Z",
+        "updated_at": "2023-05-07T17:18:25.575Z",
+        "slug": "pie"
+    }
+},
+{
+    "model": "store.product",
+    "pk": 6,
+    "fields": {
+        "name": "Television",
+        "category": 3,
+        "price": "30000.00",
+        "description": "",
+        "digital": false,
+        "image": "1.jpg",
+        "created_at": "2023-05-07T17:19:14.318Z",
+        "updated_at": "2023-05-07T17:19:14.318Z",
+        "slug": "tv"
+    }
+},
+{
+    "model": "store.product",
+    "pk": 7,
+    "fields": {
+        "name": "Camera",
+        "category": 3,
+        "price": "34000.00",
+        "description": "",
+        "digital": false,
+        "image": "2.jpg",
+        "created_at": "2023-05-07T17:19:41.793Z",
+        "updated_at": "2023-05-07T17:19:41.793Z",
+        "slug": "camera"
+    }
+},
+{
+    "model": "store.product",
+    "pk": 8,
+    "fields": {
+        "name": "Game Pad",
+        "category": 3,
+        "price": "4500.00",
+        "description": "",
+        "digital": false,
+        "image": "3.jpg",
+        "created_at": "2023-05-07T17:21:20.054Z",
+        "updated_at": "2023-05-07T17:21:20.054Z",
+        "slug": "pad"
+    }
+}
+]

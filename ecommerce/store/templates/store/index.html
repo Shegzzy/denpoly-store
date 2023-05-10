@@ -1,0 +1,205 @@
+{% extends 'store/main.html' %} {% load static %} {% block content %}
+
+<div class="slider-with-banner">
+    <div class="container">
+        <div class="row">
+            <!-- Begin Slider Area -->
+            <div class="col-lg-12 col-md-12">
+                <div class="slider-area">
+                    <div class="slider-active owl-carousel">
+                        <!-- Begin Single Slide Area -->
+                        <div class="single-slide align-center-left animation-style-01 bg-1">
+                            <img src="{% static 'images/slider/1.jpg' %}" alt="" />
+                            <div class="slider-progress"></div>
+                            <div class="slider-content">
+                                <h5>Sale Offer <span>-20% Off</span> This Week</h5>
+                                <h2>Chamcham Galaxy S9 | S9+</h2>
+                                <h3>Starting at <span>$1209.00</span></h3>
+                                <div class="default-btn slide-btn">
+                                    <a class="links" href="shop-left-sidebar.html">Shopping Now</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Single Slide Area End Here -->
+                        <!-- Begin Single Slide Area -->
+                        <div class="single-slide align-center-left animation-style-02 bg-2">
+                            <img src="{% static 'images/slider/2.jpg' %}" alt="" />
+                            <div class="slider-progress"></div>
+                            <div class="slider-content">
+                                <h5>Sale Offer <span>Black Friday</span> This Week</h5>
+                                <h2>Work Desk Surface Studio 2018</h2>
+                                <h3>Starting at <span>$824.00</span></h3>
+                                <div class="default-btn slide-btn">
+                                    <a class="links" href="shop-left-sidebar.html">Shopping Now</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Single Slide Area End Here -->
+                        <!-- Begin Single Slide Area -->
+                        <div class="single-slide align-center-left animation-style-01 bg-3">
+                            <img src="{% static 'images/slider/3.jpg' %}" alt="" />
+                            <div class="slider-progress"></div>
+                            <div class="slider-content">
+                                <h5>Sale Offer <span>-10% Off</span> This Week</h5>
+                                <h2>Phantom 4 Pro+ Obsidian</h2>
+                                <h3>Starting at <span>$1849.00</span></h3>
+                                <div class="default-btn slide-btn">
+                                    <a class="links" href="shop-left-sidebar.html">Shopping Now</a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Single Slide Area End Here -->
+                    </div>
+                </div>
+            </div>
+            <!-- Slider Area End Here -->
+            {% comment %}
+            <!-- Begin Li Banner Area -->
+            <div class="col-lg-4 col-md-4 text-center pt-xs-30">
+                <div class="li-banner">
+                    <a href="#">
+                        <img src="images/banner/1_1.jpg" alt="" />
+                    </a>
+                </div>
+                <div class="li-banner mt-15 mt-sm-30 mt-xs-30">
+                    <a href="#">
+                        <img src="images/banner/1_2.jpg" alt="" />
+                    </a>
+                </div>
+            </div>
+            <!-- Li Banner Area End Here -->
+            {% endcomment %}
+        </div>
+    </div>
+</div>
+
+<div class="product-area pt-60 pb-50">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="li-product-tab">
+                    <ul id="categories-tab" class="nav li-product-menu">
+                        <li>
+                            <a {% if selected_category == None %} class="active" {% endif %} href="{% url 'index' %}">
+                                All
+                            </a>
+                        </li>
+                        {% for category in categories %}
+                        <li>
+                            <a href="?category={{category.slug}}" {% if selected_category == category %} class="active category-link" {% else %} class="category-link" {% endif %} data-target="#category-products-{{category.id}}">
+                                <span>
+                                {{category.name}}
+                                </span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="shop-products-wrapper">
+            <div class="tab-content">
+                <div id="li-new-product" class="tab-pane fade active show" role="tabpanel">
+                    <div class="product-area shop-product-area">
+                        <div class="row">
+                            {%for product in products%}
+                            <div class="col-lg-4 col-md-4 col-sm-6 mt-40">
+                                <!-- single-product-wrap start -->
+                                <div class="single-product-wrap">
+                                    <div class="product-image">
+                                        <a href="{% url 'product_details' product.id %}" data-product="{{product.id}}">
+                                            <img src="{{product.ImageURL}}" alt="{{product.name}}">
+                                        </a>
+                                    </div>
+                                    <div class="product_desc">
+                                        <div class="product_desc_info">
+                                            <div class="product-review">
+                                                <h5 class="manufacturer">
+                                                    <a class="product_name"
+                                                        href="{% url 'product_details' product.id %}">
+                                                        {{product.name}}
+                                                    </a>
+                                                </h5>
+                                                <div class="rating-box">
+                                                    <ul class="rating">
+                                                        <li><i class="fa fa-star-o"></i></li>
+                                                        <li><i class="fa fa-star-o"></i></li>
+                                                        <li><i class="fa fa-star-o"></i></li>
+                                                        <li class="no-star"><i class="fa fa-star-o"></i>
+                                                        </li>
+                                                        <li class="no-star"><i class="fa fa-star-o"></i>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="price-box">
+                                                <span class="new-price">₦{{product.price|floatformat:0}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="add-actions">
+                                            <ul class="add-actions-link">
+                                                <li class="add-cart active">
+                                                    <a data-action="add" data-product="{{product.id}}"
+                                                        class="add-btn update-cart">
+                                                        Add to cart
+                                                    </a>
+                                                </li>
+                                                <li><a href="#" title="quick view" class="quick-view-btn"
+                                                        data-toggle="modal" data-target="#exampleModalCenter"><i
+                                                            class="fa fa-eye"></i></a></li>
+                                                <li><a class="links-details" href="wishlist.html"><i
+                                                            class="fa fa-heart-o"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- single-product-wrap end -->
+                            </div>
+                            {%endfor%}
+                        </div>
+                    </div>
+                    {% if is_paginated %}
+                    <div class="pagination">
+                        <span class="step-links">
+                            {% if page_obj_products.has_previous %}
+                                <a href="?product_page={{ page_obj_products.previous_page_number }}{% if selected_category %}&category={{selected_category.slug}}{% endif %}" class="previous-page">&laquo;</a>
+                            {% endif %}
+
+                            <span class="current-page">
+                                Page {{ page_obj_products.number }} of {{ page_obj_products.paginator.num_pages }}
+                            </span>
+
+                            {% if page_obj_products.has_next %}
+                                <a href="?product_page={{ page_obj_products.next_page_number }}{% if selected_category %}&category={{selected_category.slug}}{% endif %}" class="next-page">&raquo;</a>
+                            {% endif %}
+                        </span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% comment %}
+<div class="row">
+    {%for product in products%}
+    <div class="col-lg-3">
+        <img class="thumbnail" src="{{product.ImageURL}}" />
+        <div class="box-element product">
+            <h6><strong>{{product.name}}</strong></h6>
+            <hr />
+            <button data-action="add" data-product="{{product.id}}"
+                class="btn btn-outline-secondary add-btn update-cart">
+                Add to Cart
+            </button>
+            <h4 style="display: inline; float: right">
+                ₦{{product.price|floatformat:2}}
+            </h4>
+        </div>
+    </div>
+    {%endfor%}
+</div> {% endcomment %}

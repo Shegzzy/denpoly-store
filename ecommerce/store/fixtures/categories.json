@@ -1,0 +1,42 @@
+[
+{
+    "model": "store.categorie",
+    "pk": 1,
+    "fields": {
+        "name": "Wears",
+        "slug": "wears"
+    }
+},
+{
+    "model": "store.categorie",
+    "pk": 2,
+    "fields": {
+        "name": "Phones",
+        "slug": "phones"
+    }
+},
+{
+    "model": "store.categorie",
+    "pk": 3,
+    "fields": {
+        "name": "Home Gadgets",
+        "slug": "home_gadgets"
+    }
+},
+{
+    "model": "store.categorie",
+    "pk": 4,
+    "fields": {
+        "name": "Snacks",
+        "slug": "snacks"
+    }
+},
+{
+    "model": "store.categorie",
+    "pk": 5,
+    "fields": {
+        "name": "Housing",
+        "slug": "housing"
+    }
+}
+]
