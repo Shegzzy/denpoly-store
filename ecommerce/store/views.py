@@ -10,6 +10,7 @@ import datetime
 from .models import *
 from .util import cookieCart, cartData, guestOder
 from django.http import JsonResponse
+import secrets
 
 
 # from django.views.decorators.csrf import csrf_exempt
@@ -106,16 +107,16 @@ def user_login(request):
         return redirect("index")
 
     if request.method == "POST":
-        email = request.POST.get("email")
+        username = request.POST.get("username")
         password = request.POST.get("password")
 
         try:
-            user = User.objects.get(email=email)
+            user = User.objects.get(username=username)
         except ObjectDoesNotExist:
             messages.error(request, "User does not exist")
             return render(request, "registration/login-register.html", context)
 
-        user = authenticate(request, email=email, password=password)
+        user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
@@ -200,7 +201,7 @@ def updateItem(request):
 
 
 def processOrder(request):
-    transaction_id = datetime.datetime.now().timestamp()
+    transaction_id = secrets.token_urlsafe(20)
     data = json.loads(request.body)
 
     if request.user.is_authenticated:
