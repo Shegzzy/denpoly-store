@@ -6,7 +6,8 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 import json
-import datetime
+import requests
+from django.conf import settings
 from .models import *
 from .util import cookieCart, cartData, guestOder
 from django.http import JsonResponse
@@ -165,7 +166,13 @@ def checkout(request):
     cartItems = data["cartItems"]
     order = data["order"]
     items = data["items"]
-    context = {"items": items, "order": order, "cartItems": cartItems}
+    paystack_public_key = settings.PAYSTACK_PUBLIC_KEY
+    context = {
+        "items": items,
+        "order": order,
+        "cartItems": cartItems,
+        "paystack_public_key": paystack_public_key,
+    }
     return render(request, "store/checkout.html", context)
 
 
@@ -200,31 +207,88 @@ def updateItem(request):
     return JsonResponse("Item was added", safe=False)
 
 
+def verifyPayment(reference):
+    print("verifying payment")
+    headers = {
+        "Authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}",
+        "Content-Type": "application/json",
+    }
+    url = f"https://api.paystack.co/transaction/verify/{reference}"
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        # Payment verification successful
+        payment_data = response.json()["data"]
+        # Extract necessary payment details
+        status = payment_data["status"]
+        amount = payment_data["amount"] / 100  # Convert amount to the correct currency
+        # You can perform additional actions here based on the payment status and amount
+        return status, amount
+    else:
+        # Payment verification failed
+        return None, None
+
+
 def processOrder(request):
-    transaction_id = secrets.token_urlsafe(20)
+    print("Processing Order called")
+
     data = json.loads(request.body)
 
     if request.user.is_authenticated:
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
-
     else:
         customer, order = guestOder(request, data)
 
     total = float(data["form"]["total"])
-    order.transaction_id = transaction_id
+    transaction_id = data["reference"]
 
     if total == order.get_cart_total:
-        order.complete = True
+        # Initialize payment request with Paystack
+        headers = {
+            "Authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}",
+            "Content-Type": "application/json",
+        }
+        payload = {
+            "email": customer.email,
+            "amount": total,
+            "callback_url": request.build_absolute_uri(reverse("paystack_verify")),
+        }
+        print(payload)
+        response = requests.post(
+            "https://api.paystack.co/transaction/initialize",
+            headers=headers,
+            json=payload,
+        )
+        print(response)
+
+        if response.status_code == 200:
+            # Redirect customer to Paystack payment page
+            payment_url = response.json()["data"]["authorization_url"]
+            status, amount = verifyPayment(transaction_id)
+            if status == "success":
+                # Payment verification successful
+                order.transaction_id = transaction_id
+                order.complete = True
+                order.save()
+
+                if order.shipping == True:
+                    ShippingAddres.objects.create(
+                        customer=customer,
+                        order=order,
+                        address=data["shipping"]["address"],
+                        state=data["shipping"]["state"],
+                        city=data["shipping"]["city"],
+                        phone=data["shipping"]["phone"],
+                    )
+            else:
+                # Payment verification failed or status is not success
+                # Handle the error accordingly
+                print("Verification failed")
+            return JsonResponse(payment_url, safe=False)
+        else:
+            # Payment request failed
+            return JsonResponse(response.json(), safe=False, status=400)
     order.save()
 
-    if order.shipping == True:
-        ShippingAddres.objects.create(
-            customer=customer,
-            order=order,
-            address=data["shipping"]["address"],
-            state=data["shipping"]["state"],
-            city=data["shipping"]["city"],
-            phone=data["shipping"]["phone"],
-        )
     return JsonResponse("Payment Completed!", safe=False)

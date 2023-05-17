@@ -17,6 +17,9 @@ class Customer(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ("-created_at",)
+
     def __str__(self):
         return self.email
 
@@ -40,6 +43,9 @@ class Product(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True)
     slug = models.SlugField(unique=True, null=True)
 
+    class Meta:
+        ordering = ("-created_at",)
+
     def __str__(self):
         return self.name
 
@@ -59,6 +65,9 @@ class Order(models.Model):
     date_ordered = models.DateTimeField(auto_now_add=True)
     complete = models.BooleanField(default=False, blank=False, null=True)
     transaction_id = models.CharField(max_length=200, null=True)
+
+    class Meta:
+        ordering = ("-date_ordered",)
 
     def __str__(self):
         return str(self.customer)
@@ -90,6 +99,9 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.SET_NULL, null=True)
     quantity = models.IntegerField(default=0, blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ("-date_added",)
 
     def __str__(self):
         return str(self.product)
