@@ -30,6 +30,7 @@ def index(request):
     cartItems = data["cartItems"]
     order = data["order"]
     items = data["items"]
+
     categories = Categorie.objects.all()
 
     # Check if category is selected
@@ -145,6 +146,16 @@ def cart(request):
     return render(request, "store/cart.html", context)
 
 
+def aboutUs(request):
+    data = cartData(request)
+    cartItems = data["cartItems"]
+    order = data["order"]
+    items = data["items"]
+
+    context = {"items": items, "order": order, "cartItems": cartItems}
+    return render(request, "store/about_us.html", context)
+
+
 def productDetails(request, product_id):
     data = cartData(request)
     product = get_object_or_404(Product, id=product_id)
@@ -230,8 +241,6 @@ def verifyPayment(reference):
 
 
 def processOrder(request):
-    print("Processing Order called")
-
     data = json.loads(request.body)
 
     if request.user.is_authenticated:

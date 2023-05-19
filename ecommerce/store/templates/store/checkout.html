@@ -16,6 +16,7 @@
 <div class="checkout-area pt-60 pb-30">
     <div class="container">
         <div class="row">
+            {% if items %}
             <div class="col-lg-6 col-12" id="form-wrapper">
                 <form id="form">
                     {% csrf_token %}
@@ -25,20 +26,20 @@
                             <div class="col-md-6">
                                 <div class="checkout-form-list">
                                     <label>First Name <span class="required">*</span></label>
-                                    <input name="first_name" placeholder="" type="text">
+                                    <input name="first_name" placeholder="" required type="text">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="checkout-form-list">
                                     <label>Last Name <span class="required">*</span></label>
-                                    <input name="last_name" placeholder="" type="text">
+                                    <input name="last_name" required placeholder="" type="text">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="checkout-form-list">
                                     <label>Email <span class="required">*</span></label>
-                                    <input name="email" placeholder="" type="email">
+                                    <input required name="email" placeholder="" type="email">
                                 </div>
                             </div>
                         </div>
@@ -47,7 +48,7 @@
                             <div class="col-md-12">
                                 <div class="checkout-form-list">
                                     <label>Address <span class="required">*</span></label>
-                                    <input name="address" placeholder="Street address" type="text">
+                                    <input required name="address" placeholder="Street address" type="text">
                                 </div>
                             </div>
 
@@ -60,21 +61,21 @@
                             <div class="col-md-12">
                                 <div class="checkout-form-list">
                                     <label>Town / City <span class="required">*</span></label>
-                                    <input name="city" type="text">
+                                    <input required name="city" type="text">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="checkout-form-list">
                                     <label> State <span class="required">*</span></label>
-                                    <input type="text" name="state">
+                                    <input required type="text" name="state">
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="checkout-form-list">
                                     <label>Phone <span class="required">*</span></label>
-                                    <input name="phone" type="number">
+                                    <input required name="phone" type="number">
                                 </div>
                             </div>
                         </div>
@@ -85,7 +86,7 @@
             <div class="col-lg-6 col-12">
                 <div class="your-order" id="form-wrapper">
                     <h3>Your order</h3>
-                    {% if items %}
+                    
                     <div class="your-order-table table-responsive">
                         <table class="table">
                             <thead>
@@ -100,7 +101,7 @@
                                 {%for item in items%}
                                 <tr class="cart_item">
 
-                                    <td class="cart-product-name">{{item.product.name}} x {{order.get_cart_items}}</td>
+                                    <td class="cart-product-name">{{item.product.name}} x {{item.quantity}}</td>
                                     <td class="cart-product-total">
                                         <img src="{{item.product.ImageURL}}" alt="{{item.product.name}}"
                                             class="small-image">
@@ -135,104 +136,6 @@
     </div>
 </div>
 <!--Checkout Area End-->
-
-
-<!-- <script type="text/javascript">
-    var shipping = '{{order.shipping}}'
-    var total = '{{order.get_cart_total}}'
-    if (shipping == 'False') {
-        document.getElementById('shipping-info').innerHTML = ''
-    }
-
-    if (user != 'AnonymousUser') {
-        document.getElementById('user-info').innerHTML = ''
-    }
-
-    if (shipping == 'False' && user != 'AnonymousUser') {
-        document.getElementById('form-wrapper').classList.add("hidden");
-        document.getElementById('payment-info').classList.remove("hidden");
-
-    }
-
-
-
-    var form = document.getElementById('form')
-
-    csrftoken = form.getElementsByTagName("input")[0].value
-    console.log('Newtoken:', form.getElementsByTagName("input")[0].value)
-
-    form.addEventListener('submit', function (e) {
-        e.preventDefault()
-        console.log('form submitted')
-        document.getElementById('form-button').classList.add("hidden")
-        document.getElementById('payment-info').classList.remove("hidden")
-    })
-
-    document.getElementById('make-payment').addEventListener('click', function (e) {
-        document.getElementById('make-payment').setAttribute('disabled', true);
-        submitFormData();
-    });
-
-
-    function submitFormData() {
-        console.log('Payment button clicked')
-
-        var userFormData = {
-            'first_name': null,
-            'last_name': null,
-            'email': null,
-            'total': total,
-        }
-
-        var shippingInfo = {
-            'address': null,
-            'state': null,
-            'city': null,
-            'phone': null,
-        }
-
-        if (shipping != 'False') {
-            shippingInfo.address = form.address.value
-            shippingInfo.state = form.state.value
-            shippingInfo.city = form.city.value
-            shippingInfo.phone = form.phone.value
-        }
-
-        if (user == 'AnonymousUser') {
-            userFormData.first_name = form.first_name.value
-            userFormData.last_name = form.last_name.value
-            userFormData.email = form.email.value
-        }
-
-        console.log('Shipping Info:', shippingInfo)
-        console.log('User Info:', userFormData)
-
-        var url = '/process_order/'
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken,
-            },
-            body: JSON.stringify({
-                'form': userFormData,
-                'shipping': shippingInfo
-            })
-        })
-
-            .then((response) => response.json())
-
-            .then((data) => {
-                console.log('Success:', data);
-                alert('Transaction Completed!');
-
-                cart = {}
-                document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
-                window.location.href = "{% url 'index' %}"
-            })
-    }
-</script> -->
 
 <script src="https://js.paystack.co/v1/inline.js"></script>
 <script>

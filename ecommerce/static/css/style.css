@@ -932,6 +932,26 @@ textarea:focus {
 	overflow: visible;
 }
 
+.single-product-wrap {
+	width: 100%;
+	max-width: 300px;
+	height: auto;
+	display: flex;
+	padding: 10px;
+}
+
+.product-image {
+	text-align: center;
+	height: 100%;
+}
+
+.product-image img {
+	width: 100%;
+	height: auto;
+	object-fit: cover;
+	max-height: 200px;
+}
+
 .special-product-active .single-product-wrap::before {
 	left: 0;
 	right: 0;
@@ -2572,8 +2592,8 @@ textarea:focus {
 	cursor: pointer;
 	display: inline-block;
 	font-family: 'Rubik', sans-serif;
-	font-size: 20px;
-	font-weight: 500;
+	font-size: 18px;
+	font-weight: 400;
 	line-height: 18px;
 	padding: 0 30px 0 0;
 	position: relative;

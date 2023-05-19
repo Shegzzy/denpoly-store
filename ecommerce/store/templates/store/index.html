@@ -86,7 +86,7 @@
                         </li>
                         {% for category in categories %}
                         <li>
-                            <a href="?category={{category.slug}}" {% if selected_category == category %} class="active category-link" {% else %} class="category-link" {% endif %} data-target="#category-products-{{category.id}}">
+                            <a href="?category={{category.slug}}" {% if selected_category == category %} class="active category-link" {% else %} class="category-link" {% endif %} data-target="#li-new-product-{{category.slug}}">
                                 <span>
                                 {{category.name}}
                                 </span>
@@ -100,83 +100,165 @@
 
         <div class="shop-products-wrapper">
             <div class="tab-content">
-                <div id="li-new-product" class="tab-pane fade active show" role="tabpanel">
-                    <div class="product-area shop-product-area">
-                        <div class="row">
-                            {%for product in products%}
-                            <div class="col-lg-4 col-md-4 col-sm-6 mt-40">
-                                <!-- single-product-wrap start -->
-                                <div class="single-product-wrap">
-                                    <div class="product-image">
-                                        <a href="{% url 'product_details' product.id %}" data-product="{{product.id}}">
-                                            <img src="{{product.ImageURL}}" alt="{{product.name}}">
-                                        </a>
-                                    </div>
-                                    <div class="product_desc">
-                                        <div class="product_desc_info">
-                                            <div class="product-review">
-                                                <h5 class="manufacturer">
-                                                    <a class="product_name"
-                                                        href="{% url 'product_details' product.id %}">
-                                                        {{product.name}}
+                {% if selected_category %}
+                    <div id="li-new-product-{{selected_category.slug}}" class="tab-pane fade active show" role="tabpanel">
+                        <div class="product-area shop-product-area">
+                            <div class="row">
+                                {%for product in products%}
+                                    {% if product.category == selected_category %}
+                                        <div class="col-lg-4 col-md-4 col-sm-6 mt-40">
+                                            <!-- single-product-wrap start -->
+                                            <div class="single-product-wrap">
+                                                <div class="product-image">
+                                                    <a href="{% url 'product_details' product.id %}" data-product="{{product.id}}">
+                                                        <img src="{{product.ImageURL}}" alt="{{product.name}}">
                                                     </a>
-                                                </h5>
-                                                <div class="rating-box">
-                                                    <ul class="rating">
-                                                        <li><i class="fa fa-star-o"></i></li>
-                                                        <li><i class="fa fa-star-o"></i></li>
-                                                        <li><i class="fa fa-star-o"></i></li>
-                                                        <li class="no-star"><i class="fa fa-star-o"></i>
+                                                </div>
+                                                <div class="product_desc">
+                                                    <div class="product_desc_info">
+                                                        <div class="product-review">
+                                                            <h5 class="manufacturer">
+                                                                <a class="product_name"
+                                                                    href="{% url 'product_details' product.id %}">
+                                                                    {{product.name}}
+                                                                </a>
+                                                            </h5>
+                                                            <div class="rating-box">
+                                                                <ul class="rating">
+                                                                    <li><i class="fa fa-star-o"></i></li>
+                                                                    <li><i class="fa fa-star-o"></i></li>
+                                                                    <li><i class="fa fa-star-o"></i></li>
+                                                                    <li class="no-star"><i class="fa fa-star-o"></i>
+                                                                    </li>
+                                                                    <li class="no-star"><i class="fa fa-star-o"></i>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                        <div class="price-box">
+                                                            <span class="new-price">₦{{product.price|floatformat:0}}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="add-actions">
+                                                        <ul class="add-actions-link">
+                                                            <li class="add-cart active">
+                                                                <button data-action="add" data-product="{{product.id}}"
+                                                                    class="add-btn update-cart">
+                                                                    Add to cart
+                                                                </button>
+                                                            </li>
+                                                            <li><a href="#" title="quick view" class="quick-view-btn"
+                                                                    data-toggle="modal" data-target="#exampleModalCenter"><i
+                                                                        class="fa fa-eye"></i></a></li>
+                                                            <li><a class="links-details" href="wishlist.html"><i
+                                                                        class="fa fa-heart-o"></i></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- single-product-wrap end -->
+                                        </div>
+                                    {% endif %}
+                                {%endfor%}
+                            </div>
+                        </div>
+                        {% if is_paginated %}
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if page_obj_products.has_previous %}
+                                    <a href="?product_page={{ page_obj_products.previous_page_number }}{% if selected_category %}&category={{selected_category.slug}}{% endif %}" class="previous-page">&laquo;</a>
+                                {% endif %}
+
+                                <span class="current-page">
+                                    Page {{ page_obj_products.number }} of {{ page_obj_products.paginator.num_pages }}
+                                </span>
+
+                                {% if page_obj_products.has_next %}
+                                    <a href="?product_page={{ page_obj_products.next_page_number }}{% if selected_category %}&category={{selected_category.slug}}{% endif %}" class="next-page">&raquo;</a>
+                                {% endif %}
+                            </span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% else %}
+                    <div id="li-new-product-{{selected_category.slug}}" class="tab-pane fade active show" role="tabpanel">
+                        <div class="product-area shop-product-area">
+                            <div class="row">
+                                {%for product in products%}
+                                    <div class="col-lg-4 col-md-4 col-sm-6 mt-40">
+                                        <!-- single-product-wrap start -->
+                                        <div class="single-product-wrap">
+                                            <div class="product-image">
+                                                <a href="{% url 'product_details' product.id %}" data-product="{{product.id}}">
+                                                    <img src="{{product.ImageURL}}" alt="{{product.name}}">
+                                                </a>
+                                            </div>
+                                            <div class="product_desc">
+                                                <div class="product_desc_info">
+                                                    <div class="product-review">
+                                                        <h5 class="manufacturer">
+                                                            <a class="product_name"
+                                                                href="{% url 'product_details' product.id %}">
+                                                                {{product.name}}
+                                                            </a>
+                                                        </h5>
+                                                        <div class="rating-box">
+                                                            <ul class="rating">
+                                                                <li><i class="fa fa-star-o"></i></li>
+                                                                <li><i class="fa fa-star-o"></i></li>
+                                                                <li><i class="fa fa-star-o"></i></li>
+                                                                <li class="no-star"><i class="fa fa-star-o"></i>
+                                                                </li>
+                                                                <li class="no-star"><i class="fa fa-star-o"></i>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="price-box">
+                                                        <span class="new-price">₦{{product.price|floatformat:0}}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="add-actions">
+                                                    <ul class="add-actions-link">
+                                                        <li class="add-cart active">
+                                                            <a data-action="add" data-product="{{product.id}}"
+                                                                class="add-btn update-cart">
+                                                                Add to cart
+                                                            </a>
                                                         </li>
-                                                        <li class="no-star"><i class="fa fa-star-o"></i>
-                                                        </li>
+                                                        <li><a href="#" title="quick view" class="quick-view-btn"
+                                                                data-toggle="modal" data-target="#exampleModalCenter"><i
+                                                                    class="fa fa-eye"></i></a></li>
+                                                        <li><a class="links-details" href="wishlist.html"><i
+                                                                    class="fa fa-heart-o"></i></a></li>
                                                     </ul>
                                                 </div>
                                             </div>
-                                            <div class="price-box">
-                                                <span class="new-price">₦{{product.price|floatformat:0}}</span>
-                                            </div>
                                         </div>
-                                        <div class="add-actions">
-                                            <ul class="add-actions-link">
-                                                <li class="add-cart active">
-                                                    <a data-action="add" data-product="{{product.id}}"
-                                                        class="add-btn update-cart">
-                                                        Add to cart
-                                                    </a>
-                                                </li>
-                                                <li><a href="#" title="quick view" class="quick-view-btn"
-                                                        data-toggle="modal" data-target="#exampleModalCenter"><i
-                                                            class="fa fa-eye"></i></a></li>
-                                                <li><a class="links-details" href="wishlist.html"><i
-                                                            class="fa fa-heart-o"></i></a></li>
-                                            </ul>
-                                        </div>
+                                        <!-- single-product-wrap end -->
                                     </div>
-                                </div>
-                                <!-- single-product-wrap end -->
+                                {%endfor%}
                             </div>
-                            {%endfor%}
                         </div>
-                    </div>
-                    {% if is_paginated %}
-                    <div class="pagination">
-                        <span class="step-links">
-                            {% if page_obj_products.has_previous %}
-                                <a href="?product_page={{ page_obj_products.previous_page_number }}{% if selected_category %}&category={{selected_category.slug}}{% endif %}" class="previous-page">&laquo;</a>
-                            {% endif %}
+                        {% if is_paginated %}
+                        <div class="pagination">
+                            <span class="step-links">
+                                {% if page_obj_products.has_previous %}
+                                    <a href="?product_page={{ page_obj_products.previous_page_number }}{% if selected_category %}&category={{selected_category.slug}}{% endif %}" class="previous-page">&laquo;</a>
+                                {% endif %}
 
-                            <span class="current-page">
-                                Page {{ page_obj_products.number }} of {{ page_obj_products.paginator.num_pages }}
+                                <span class="current-page">
+                                    Page {{ page_obj_products.number }} of {{ page_obj_products.paginator.num_pages }}
+                                </span>
+
+                                {% if page_obj_products.has_next %}
+                                    <a href="?product_page={{ page_obj_products.next_page_number }}{% if selected_category %}&category={{selected_category.slug}}{% endif %}" class="next-page">&raquo;</a>
+                                {% endif %}
                             </span>
-
-                            {% if page_obj_products.has_next %}
-                                <a href="?product_page={{ page_obj_products.next_page_number }}{% if selected_category %}&category={{selected_category.slug}}{% endif %}" class="next-page">&raquo;</a>
-                            {% endif %}
-                        </span>
+                        </div>
+                        {% endif %}
                     </div>
-                    {% endif %}
-                </div>
+                {% endif %}
             </div>
         </div>
     </div>

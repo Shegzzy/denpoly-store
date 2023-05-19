@@ -63,7 +63,9 @@
                                             <li>Items <span>{{order.get_cart_items}}</span></li>
                                             <li>Total <span>₦{{order.get_cart_total|floatformat:2}}</span></li>
                                         </ul>
+                                        {% if order.get_cart_items %}
                                         <a href="{% url 'checkout' %}">Proceed to checkout</a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
