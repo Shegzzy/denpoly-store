@@ -17,7 +17,7 @@ SECRET_KEY = "(8e6mxc1cw4o--_k2*8(@mk-0&hw^p-=&ga&59=t724u3g3tqj"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["https://denpoly-store-production.up.railway.app/", "localhost"]
+ALLOWED_HOSTS = ["denpoly-store-production.up.railway.app/", "localhost"]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
