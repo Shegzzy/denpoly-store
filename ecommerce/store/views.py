@@ -146,6 +146,32 @@ def cart(request):
     return render(request, "store/cart.html", context)
 
 
+def cart_data(request):
+    data = cartData(request)
+    cartItems = data["cartItems"]
+    order = data["order"]
+    items = data["items"]
+
+    # Serialize the cart data into JSON format
+    response_data = {
+        "cartItems": cartItems,
+        "order": {
+            "get_cart_total": order["get_cart_total"],
+            "get_cart_items": order["get_cart_items"],
+            "shipping": order["shipping"],
+        },
+        "items": {
+            item["product"]["id"]: {
+                "quantity": item["quantity"],
+                "get_total": item["get_total"],
+            }
+            for item in items
+        },
+    }
+
+    return JsonResponse(response_data)
+
+
 def aboutUs(request):
     data = cartData(request)
     cartItems = data["cartItems"]
@@ -189,10 +215,12 @@ def checkout(request):
 
 def updateItem(request):
     data = json.loads(request.body)
+    datas = cartData(request)
     productId = data["productId"]
     action = data["action"]
+    items = datas["items"]
 
-    # print("action:", action)
+    # print("data:", data)
     # print("productId:", productId)
 
     if request.user.is_authenticated:
@@ -201,6 +229,7 @@ def updateItem(request):
     else:
         cookieData = cookieCart(request)
         order, created = guestOder(request, cookieData)
+        # print(cookieData)
 
     product = Product.objects.get(id=productId)
     orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
@@ -209,13 +238,34 @@ def updateItem(request):
         orderItem.quantity = orderItem.quantity + 1
     elif action == "remove":
         orderItem.quantity = orderItem.quantity - 1
+    elif action == "delete":
+        orderItem.quantity = 0
 
     orderItem.save()
 
     if orderItem.quantity <= 0:
         orderItem.delete()
 
-    return JsonResponse("Item was added", safe=False)
+    # After updating the orderItem quantity and saving it
+    cart_items_count = order.get_cart_items
+    cart_items_total = order.get_cart_total
+    items_quantity = orderItem.quantity
+    singleProduct_total = orderItem.get_total
+    mini_cart_html = render(
+        request, "mini_cart/mini_cart.html", {"items": items, "order": order}
+    ).content.decode("utf-8")
+
+    # Construct the response data including the cart count
+    response_data = {
+        "message": "Item was added",
+        "cartItems": cart_items_count,
+        "cartTotal": cart_items_total,
+        "itemsQuantity": items_quantity,
+        "productTotal": singleProduct_total,
+        "miniCartHTML": mini_cart_html,
+    }
+
+    return JsonResponse(response_data)
 
 
 def verifyPayment(reference):

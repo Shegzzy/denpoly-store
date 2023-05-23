@@ -1,0 +1,37 @@
+{% load static %} {% if items %}
+<ul class="minicart-product-list">
+    {% for item in items %}
+    <li id="item-container-{{item.product.id}}">
+        <a href="{% url 'product_details' item.product.id %}" class="minicart-product-image">
+            <img src="{{item.product.ImageURL}}" alt="cart products" />
+        </a>
+        <div class="minicart-product-details">
+            <h6>
+                <a href="{% url 'product_details' item.product.id %}">{{item.product.name}}</a>
+            </h6>
+            <span> ₦{{item.product.price}} </span>
+            x
+            <span id="miniCart_item-quantity-{{item.product.id}}"> {{item.quantity}} </span>
+        </div>
+        <button data-action="delete" data-product="{{item.product.id}}" class="close update-cart" title="Remove"
+            onclick="deleteCartItem('{{ item.product.id }}')">
+            <i class="fa fa-close"></i>
+        </button>
+    </li>
+    {%endfor%}
+</ul>
+<p class="minicart-total">
+    TOTAL:
+    <span id="mini-cart-total">₦{{order.get_cart_total|floatformat:2}}</span>
+</p>
+<div class="minicart-button">
+    <a href="{% url 'cart' %}" class="li-button li-button-fullwidth li-button-dark">
+        <span>View Full Cart</span>
+    </a>
+    <a href="{% url 'checkout' %}" class="li-button li-button-fullwidth">
+        <span>Checkout</span>
+    </a>
+</div>
+{% else %}
+<p class="minicart-total">Your Cart is Empty</p>
+{% endif %}

@@ -17,7 +17,7 @@ SECRET_KEY = "(8e6mxc1cw4o--_k2*8(@mk-0&hw^p-=&ga&59=t724u3g3tqj"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["denpoly-store-production.up.railway.app", "127.0.0.1"]
+ALLOWED_HOSTS = []
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -68,23 +68,23 @@ WSGI_APPLICATION = "ecommerce.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
-
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "railway",
-        "USER": "postgres",
-        "PASSWORD": "WEPqrbR5rvTkAHHD18k1",
-        "HOST": "containers-us-west-39.railway.app",
-        "PORT": "7670",
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": "railway",
+#         "USER": "postgres",
+#         "PASSWORD": "WEPqrbR5rvTkAHHD18k1",
+#         "HOST": "containers-us-west-39.railway.app",
+#         "PORT": "7670",
+#     }
+# }
 
 
 # Password validation

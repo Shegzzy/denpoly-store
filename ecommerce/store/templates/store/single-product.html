@@ -20,8 +20,7 @@
                 <div class="product-details-left">
                     <div class="product-details-images slider-navigation-1">
                         <div class="lg-image">
-                            <a class="popup-img venobox vbox-item" href="{{product.ImageURL}}"
-                                data-gall="myGallery">
+                            <a class="popup-img venobox vbox-item" href="{{product.ImageURL}}" data-gall="myGallery">
                                 <img src="{{product.ImageURL}}" alt="product image">
                             </a>
                         </div>
@@ -47,7 +46,7 @@
                             </ul>
                         </div>
                         <div class="price-box pt-20">
-                            <span class="new-price new-price-2">{{product.price}}</span>
+                            <span class="new-price new-price-2">₦{{product.price|floatformat:2}}</span>
                         </div>
                         <div class="product-desc">
                             <p>
@@ -74,11 +73,14 @@
                                     <label>Quantity</label>
                                     <div class="cart-plus-minus">
                                         <input class="cart-plus-minus-box quantity" value="{{quantity}}" type="text">
-                                        <div class="dec qtybutton update-cart" data-product="{{product.id}}" data-action="remove"><i class="fa fa-angle-down"></i></div>
-                                        <div class="inc qtybutton update-cart" data-product="{{product.id}}" data-action="add"><i class="fa fa-angle-up"></i></div>
+                                        <div class="dec qtybutton update-cart" data-product="{{product.id}}"
+                                            data-action="remove"><i class="fa fa-angle-down"></i></div>
+                                        <div class="inc qtybutton update-cart" data-product="{{product.id}}"
+                                            data-action="add"><i class="fa fa-angle-up"></i></div>
                                     </div>
                                 </div> {% endcomment %}
-                                <button class="add-to-cart update-cart" data-action="add" data-product="{{product.id}}">Add to cart</button>
+                                <button class="add-to-cart update-cart" data-action="add"
+                                    data-product="{{product.id}}">Add to cart</button>
                             </form>
                         </div>
                         <div class="product-additional-info pt-25">
@@ -101,7 +103,7 @@
                                         <div class="reassurance-icon">
                                             <i class="fa fa-check-square-o"></i>
                                         </div>
-                                        <p>Security policy (edit with Customer reassurance module)</p>
+                                        <p>Security policy</p>
                                     </div>
                                 </li>
                                 <li>
@@ -109,7 +111,7 @@
                                         <div class="reassurance-icon">
                                             <i class="fa fa-truck"></i>
                                         </div>
-                                        <p>Delivery policy (edit with Customer reassurance module)</p>
+                                        <p>Delivery policy</p>
                                     </div>
                                 </li>
                                 <li>
@@ -117,7 +119,7 @@
                                         <div class="reassurance-icon">
                                             <i class="fa fa-exchange"></i>
                                         </div>
-                                        <p> Return policy (edit with Customer reassurance module)</p>
+                                        <p> Return policy</p>
                                     </div>
                                 </li>
                             </ul>

@@ -86,7 +86,7 @@
             <div class="col-lg-6 col-12">
                 <div class="your-order" id="form-wrapper">
                     <h3>Your order</h3>
-                    
+
                     <div class="your-order-table table-responsive">
                         <table class="table">
                             <thead>
@@ -106,7 +106,8 @@
                                         <img src="{{item.product.ImageURL}}" alt="{{item.product.name}}"
                                             class="small-image">
                                     </td>
-                                    <td class="cart-product-total"><span class="amount">₦{{item.get_total}}</span></td>
+                                    <td class="cart-product-total"><span
+                                            class="amount">₦{{item.get_total|floatformat:2}}</span></td>
 
                                 </tr>
                                 {% endfor %}
@@ -116,7 +117,7 @@
                                     <th>Order Total</th>
                                     <td><strong><span class="amount"></span></strong></td>
                                     <td><strong><span
-                                                class="amount">₦{{order.get_cart_total|floatformat:0}}</span></strong>
+                                                class="amount">₦{{order.get_cart_total|floatformat:2}}</span></strong>
                                     </td>
                                 </tr>
                             </tfoot>
