@@ -62,6 +62,16 @@ def index(request):
     return render(request, "store/index.html", context)
 
 
+def get_products(request):
+    category_slug = request.GET.get("category")
+    category = get_object_or_404(Categorie, slug=category_slug)
+    products = Product.objects.filter(category=category)
+    context = {
+        "products": products,
+    }
+    return render(request, "category_products/products.html", context)
+
+
 def register(request):
     if request.method == "POST":
         # Get form data
@@ -146,32 +156,6 @@ def cart(request):
     return render(request, "store/cart.html", context)
 
 
-def cart_data(request):
-    data = cartData(request)
-    cartItems = data["cartItems"]
-    order = data["order"]
-    items = data["items"]
-
-    # Serialize the cart data into JSON format
-    response_data = {
-        "cartItems": cartItems,
-        "order": {
-            "get_cart_total": order["get_cart_total"],
-            "get_cart_items": order["get_cart_items"],
-            "shipping": order["shipping"],
-        },
-        "items": {
-            item["product"]["id"]: {
-                "quantity": item["quantity"],
-                "get_total": item["get_total"],
-            }
-            for item in items
-        },
-    }
-
-    return JsonResponse(response_data)
-
-
 def aboutUs(request):
     data = cartData(request)
     cartItems = data["cartItems"]
@@ -213,6 +197,35 @@ def checkout(request):
     return render(request, "store/checkout.html", context)
 
 
+def cart_data(request):
+    data = cartData(request)
+    cartItems = data["cartItems"]
+    order = data["order"]
+    items = data["items"]
+    mini_cart_html = render(
+        request, "mini_cart/mini_cart.html", {"items": items, "order": order}
+    ).content.decode("utf-8")
+    # Serialize the cart data into JSON format
+    response_data = {
+        "miniCartHTML": mini_cart_html,
+        "cartItems": cartItems,
+        "order": {
+            "get_cart_total": order["get_cart_total"],
+            "get_cart_items": order["get_cart_items"],
+            "shipping": order["shipping"],
+        },
+        "items": {
+            item["product"]["id"]: {
+                "quantity": item["quantity"],
+                "get_total": item["get_total"],
+            }
+            for item in items
+        },
+    }
+
+    return JsonResponse(response_data)
+
+
 def updateItem(request):
     data = json.loads(request.body)
     datas = cartData(request)
@@ -220,16 +233,12 @@ def updateItem(request):
     action = data["action"]
     items = datas["items"]
 
-    # print("data:", data)
-    # print("productId:", productId)
-
     if request.user.is_authenticated:
         customer = request.user.customer
         order, created = Order.objects.get_or_create(customer=customer, complete=False)
     else:
         cookieData = cookieCart(request)
         order, created = guestOder(request, cookieData)
-        # print(cookieData)
 
     product = Product.objects.get(id=productId)
     orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
@@ -246,7 +255,9 @@ def updateItem(request):
     if orderItem.quantity <= 0:
         orderItem.delete()
 
-    # After updating the orderItem quantity and saving it
+    # Update the items variable with the updated order items
+    items = OrderItem.objects.filter(order=order)
+
     cart_items_count = order.get_cart_items
     cart_items_total = order.get_cart_total
     items_quantity = orderItem.quantity
@@ -255,7 +266,6 @@ def updateItem(request):
         request, "mini_cart/mini_cart.html", {"items": items, "order": order}
     ).content.decode("utf-8")
 
-    # Construct the response data including the cart count
     response_data = {
         "message": "Item was added",
         "cartItems": cart_items_count,

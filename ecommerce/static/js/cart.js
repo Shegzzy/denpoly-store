@@ -1,24 +1,43 @@
-var updateBtns = document.getElementsByClassName('update-cart')
+var updateBtns = document.getElementsByClassName('update-cart');
 
 for (var i = 0; i < updateBtns.length; i++) {
     updateBtns[i].addEventListener('click', function (event) {
         event.preventDefault();
-        var productId = this.dataset.product
-        var action = this.dataset.action
-        console.log('productId:', productId, 'action:', action)
+        var productId = this.dataset.product;
+        var action = this.dataset.action;
+        console.log('productId:', productId, 'action:', action);
 
-        console.log('USER:', user)
+        console.log('USER:', user);
         if (user == 'AnonymousUser') {
-            addCookieItem(productId, action)
+            addCookieItem(productId, action);
         } else {
-            updateUserOrder(productId, action)
+            updateUserOrder(productId, action);
         }
+    });
+}
 
-    })
+function addUpdateCartListeners() {
+    var updateBtns = document.getElementsByClassName('update-cart');
+
+    for (var i = 0; i < updateBtns.length; i++) {
+        updateBtns[i].addEventListener('click', function (event) {
+            event.preventDefault();
+            var productId = this.dataset.product;
+            var action = this.dataset.action;
+            console.log('productId:', productId, 'action:', action);
+
+            console.log('USER:', user);
+            if (user == 'AnonymousUser') {
+                addCookieItem(productId, action);
+            } else {
+                updateUserOrder(productId, action);
+            }
+        });
+    }
 }
 
 function addCookieItem(productId, action) {
-    console.log('Guest user...')
+    console.log('Guest user...');
 
     if (action === 'add') {
         if (cart[productId] === undefined) {
@@ -37,14 +56,14 @@ function addCookieItem(productId, action) {
     }
 
     if (action === 'delete') {
-        cart[productId]['quantity'] === 0;
-        delete cart[productId]
-        deleteCartItem(productId)
+        cart[productId]['quantity'] = 0;
+        delete cart[productId];
+        deleteCartItem(productId);
         // Remove the item from the DOM
     }
 
-    console.log('Cart:', cart)
-    document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/"
+    console.log('Cart:', cart);
+    document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/";
 
     const cartCountElement = document.getElementById('cart-count');
     const totalQuantity = Object.values(cart).reduce((acc, item) => acc + item.quantity, 0);
@@ -62,10 +81,12 @@ function addCookieItem(productId, action) {
             }
 
             const miniCartTotalElement = document.getElementById('mini-cart-total');
-            if (data.order && data.order.get_cart_total) {
-                miniCartTotalElement.textContent = '₦' + data.order.get_cart_total;
-            } else {
-                miniCartTotalElement.textContent = '₦0';
+            if (miniCartTotalElement !== null) {
+                if (data.order && data.order.get_cart_total) {
+                    miniCartTotalElement.textContent = '₦' + data.order.get_cart_total;
+                } else {
+                    miniCartTotalElement.textContent = '₦0';
+                }
             }
 
             const cartsCountElement = document.getElementById('carts-count');
@@ -73,7 +94,7 @@ function addCookieItem(productId, action) {
                 cartsCountElement.textContent = data.cartItems;
             }
 
-            const itemsQuantityElement = document.getElementById(`items-quantity-${productId}`);
+            const itemsQuantityElement = document.getElementById(`cart-items-quantity-${productId}`);
             if (itemsQuantityElement && data.items[productId] && data.items[productId].quantity !== undefined) {
                 itemsQuantityElement.value = data.items[productId].quantity;
             }
@@ -82,7 +103,7 @@ function addCookieItem(productId, action) {
                 removeCartItem(productId);
             }
 
-            const itemsQuantityField = document.getElementById(`item-quantity-${productId}`);
+            const itemsQuantityField = document.getElementById(`miniCart_item-quantity-${productId}`);
             if (itemsQuantityField && data.items[productId] && data.items[productId].quantity !== undefined) {
                 itemsQuantityField.textContent = data.items[productId].quantity;
             }
@@ -95,13 +116,18 @@ function addCookieItem(productId, action) {
             if (itemsAmountElement && data.items[productId] && data.items[productId].get_total !== undefined) {
                 itemsAmountElement.textContent = '₦' + data.items[productId].get_total;
             }
+
+            const miniCartItemsElement = document.getElementById('mini-cart-items');
+            if (miniCartItemsElement) {
+                miniCartItemsElement.innerHTML = data.miniCartHTML;
+            }
         })
         .catch(error => console.error('Error:', error));
 }
 
 function updateUserOrder(productId, action) {
-    console.log('user is logged in as:', user)
-    var url = '/update_item/'
+    console.log('user is logged in as:', user);
+    var url = '/update_item/';
 
     fetch(url, {
         method: 'POST',
@@ -114,7 +140,7 @@ function updateUserOrder(productId, action) {
 
         .then((response) => {
             console.log(response);
-            return response.json()
+            return response.json();
         })
 
         .then((data) => {
@@ -171,23 +197,27 @@ function updateUserOrder(productId, action) {
 }
 
 function removeCartItem(productId) {
-    const itemElement = document.getElementById(`cart-items-quantity-${productId}`).closest('tr');
-    if (itemElement) {
-        delete itemElement;
-        itemElement.remove();
+    const itemElement = document.getElementById(`cart-items-quantity-${productId}`);
+    if (itemElement && itemElement.closest('tr')) {
+        const itemHolder = itemElement.closest('tr');
+        itemHolder.remove();
     }
 }
+
 
 function removeCartItems(productId) {
     const itemContainer = document.getElementById(`item-container-${productId}`);
-    if (itemContainer) {
-        delete itemContainer;
-        itemContainer.remove();
+    const miniItemHolder = itemContainer.closest('li');
+    if (miniItemHolder) {
+        miniItemHolder.remove();
     }
 }
 
+
 function deleteCartItem(productId) {
-    fetch('/update_item/', {
+    var url = user === 'AnonymousUser' ? '/cart_data/' : '/update_item/';
+
+    fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -207,14 +237,54 @@ function deleteCartItem(productId) {
                 itemHolder.remove();
             }
 
-            const itemElement = document.getElementById(`cart-items-quantity-${productId}`).closest('tr');
+            const itemElement = document.getElementById(`cart-items-quantity-${productId}`);
             if (itemElement) {
-                itemElement.remove();
+                const itemHolder = itemElement.closest('tr');
+                if (itemHolder) {
+                    itemHolder.remove();
+                }
             }
+
         })
         .catch((error) => {
             console.error('Error:', error);
         });
 }
+// Get the category slug
+$(document).ready(function () {
+    // Function to handle tab switching
+    $('#categories-tab').on('click', '.category-link', function (e) {
+        e.preventDefault();  // Prevent the default link behavior
 
+        // Remove the 'active' class from all category links
+        $('.category-link').removeClass('active');
 
+        // Add the 'active' class to the clicked category link
+        $(this).addClass('active');
+
+        // Get the target tab ID from the data attribute
+        var targetTabId = $(this).data('target');
+
+        // Hide all tab panes
+        $('.tab-pane').removeClass('active show');
+
+        // Show the target tab pane
+        $(targetTabId).addClass('active show');
+
+        // Fetch and replace the product data for the selected category
+        var categorySlug = $(this).attr('href').split('=')[1];
+        var url = '/get-products/?category=' + categorySlug;
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function (data) {
+                $('#products-section').html(data);
+                addUpdateCartListeners()
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                console.log('Error:', errorThrown);
+            }
+        });
+    });
+});
