@@ -245,10 +245,13 @@ def updateItem(request):
 
     if action == "add":
         orderItem.quantity = orderItem.quantity + 1
+        messages.success(request, "Item added to cart")
     elif action == "remove":
         orderItem.quantity = orderItem.quantity - 1
+        messages.success(request, "Item removed from cart")
     elif action == "delete":
         orderItem.quantity = 0
+        messages.success(request, "Item deleted from cart")
 
     orderItem.save()
 
@@ -265,9 +268,10 @@ def updateItem(request):
     mini_cart_html = render(
         request, "mini_cart/mini_cart.html", {"items": items, "order": order}
     ).content.decode("utf-8")
+    message_text = [str(message) for message in messages.get_messages(request)]
 
     response_data = {
-        "message": "Item was added",
+        "message": message_text,
         "cartItems": cart_items_count,
         "cartTotal": cart_items_total,
         "itemsQuantity": items_quantity,

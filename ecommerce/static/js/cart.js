@@ -32,6 +32,7 @@ function addUpdateCartListeners() {
             } else {
                 updateUserOrder(productId, action);
             }
+
         });
     }
 }
@@ -52,6 +53,8 @@ function addCookieItem(productId, action) {
         if (cart[productId]['quantity'] <= 0) {
             console.log('Item removed');
             delete cart[productId];
+            removeCartItem(productId);
+
         }
     }
 
@@ -59,8 +62,10 @@ function addCookieItem(productId, action) {
         cart[productId]['quantity'] = 0;
         delete cart[productId];
         deleteCartItem(productId);
+
         // Remove the item from the DOM
     }
+
 
     console.log('Cart:', cart);
     document.cookie = 'cart=' + JSON.stringify(cart) + ";domain=;path=/";
@@ -97,10 +102,10 @@ function addCookieItem(productId, action) {
             const itemsQuantityElement = document.getElementById(`cart-items-quantity-${productId}`);
             if (itemsQuantityElement && data.items[productId] && data.items[productId].quantity !== undefined) {
                 itemsQuantityElement.value = data.items[productId].quantity;
-            }
 
-            if (data.items[productId] && data.items[productId].quantity <= 0) {
-                removeCartItem(productId);
+                if (data.items[productId].quantity <= 0) {
+                    removeCartItem(productId); // Remove the item from the DOM
+                }
             }
 
             const itemsQuantityField = document.getElementById(`miniCart_item-quantity-${productId}`);
@@ -135,7 +140,7 @@ function updateUserOrder(productId, action) {
             'Content-Type': 'application/json',
             'X-CSRFToken': csrftoken,
         },
-        body: JSON.stringify({ 'productId': productId, 'action': action, 'cart': cart }),
+        body: JSON.stringify({ 'productId': productId, 'action': action }),
     })
 
         .then((response) => {
@@ -193,6 +198,7 @@ function updateUserOrder(productId, action) {
             if (miniCartItemsElement) {
                 miniCartItemsElement.innerHTML = data.miniCartHTML;
             }
+            showPopupMessage(data.message[0])
         });
 }
 
@@ -207,9 +213,11 @@ function removeCartItem(productId) {
 
 function removeCartItems(productId) {
     const itemContainer = document.getElementById(`item-container-${productId}`);
-    const miniItemHolder = itemContainer.closest('li');
-    if (miniItemHolder) {
-        miniItemHolder.remove();
+    if (itemContainer) {
+        const miniItemHolder = itemContainer.closest('li');
+        if (miniItemHolder) {
+            miniItemHolder.remove();
+        }
     }
 }
 
@@ -231,19 +239,9 @@ function deleteCartItem(productId) {
         })
         .then((data) => {
             console.log('data:', data);
-            // Update the cart UI accordingly
-            const itemHolder = document.getElementById(`item-container-${productId}`);
-            if (itemHolder) {
-                itemHolder.remove();
-            }
 
-            const itemElement = document.getElementById(`cart-items-quantity-${productId}`);
-            if (itemElement) {
-                const itemHolder = itemElement.closest('tr');
-                if (itemHolder) {
-                    itemHolder.remove();
-                }
-            }
+            removeCartItems(productId);
+            removeCartItem(productId);
 
         })
         .catch((error) => {
@@ -266,10 +264,17 @@ $(document).ready(function () {
         var targetTabId = $(this).data('target');
 
         // Hide all tab panes
-        $('.tab-pane').removeClass('active show');
+        $('.tab-pane').removeClass('active');
+        $('.tab-pane').css('opacity', 0);
 
-        // Show the target tab pane
-        $(targetTabId).addClass('active show');
+        // Show the target tab pane with animation
+        $(targetTabId).addClass('active');
+        setTimeout(function () {
+            $(targetTabId).css('opacity', 1);
+        }, 50);
+
+        // Hide the product section with animation
+        $('#products-section').removeClass('show');
 
         // Fetch and replace the product data for the selected category
         var categorySlug = $(this).attr('href').split('=')[1];
@@ -288,3 +293,27 @@ $(document).ready(function () {
         });
     });
 });
+
+function showPopupMessage(message) {
+    console.log('Showing popup message');
+    var popupMessage = document.getElementById('popup-message');
+    var popupMessageText = document.getElementById('popup-message-text');
+
+    if (popupMessage && popupMessageText) {
+        popupMessageText.textContent = message;
+        popupMessage.classList.add('show');
+
+        // Hide the popup message after a certain duration
+        setTimeout(function () {
+            hidePopupMessage();
+        }, 3000); // Adjust the duration as desired
+    }
+}
+
+function hidePopupMessage() {
+    var popupMessage = document.getElementById('popup-message');
+    if (popupMessage) {
+        popupMessage.classList.remove('show');
+    }
+}
+

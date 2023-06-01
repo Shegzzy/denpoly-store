@@ -106,7 +106,6 @@
                                 {% include "category_products/products.html" %}
                             </div>
                         </div>
-                        {% if is_paginated %}
                         <div class="pagination">
                             <span class="step-links">
                                 {% if page_obj_products.has_previous %}
@@ -122,7 +121,6 @@
                                 {% endif %}
                             </span>
                         </div>
-                        {% endif %}
                     </div>
             </div>
         </div>

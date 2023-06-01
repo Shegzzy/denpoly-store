@@ -2984,17 +2984,43 @@ textarea:focus {
 .tab-content .tab-pane {
 	display: block;
 	height: 0;
-	opacity: 0;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
 	visibility: hidden;
 	width: 100%;
 }
+
+
 
 .tab-content .tab-pane.active {
 	height: auto;
 	opacity: 1;
 	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
 	visibility: visible;
+}
+
+#popup-message {
+	position: fixed;
+	top: 20px;
+	left: 120%;
+	transform: translateX(-60%);
+	background-color: #333;
+	color: #fff;
+	padding: 10px 20px;
+	border-radius: 5px;
+	opacity: 0;
+	transition: all 0.5s ease-in-out;
+	z-index: 9999;
+	width: 200px;
+
+	@media (max-width: 768px) {
+		width: 250px;
+		font-size: 14px;
+	}
+}
+
+#popup-message.show {
+	left: 80%;
+	opacity: 1;
 }
 
 .product-active .owl-nav button,

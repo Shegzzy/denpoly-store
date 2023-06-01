@@ -88,8 +88,8 @@
 </head>
 
 <body>
-
     <div class="body-wrapper">
+        {% include "popup/message.html" %}
         <header>
             <!-- Begin Header Top Area -->
             <div class="header-top">
@@ -228,8 +228,12 @@
             </div>
             <!-- Mobile Menu Area End Here -->
         </header>
+        {% block content %}
+        
 
-        {% block content %} {% endblock content %}
+
+
+        {% endblock content %}
         <div class="footer">
             <!-- Begin Footer Static Top Area -->
             <div class="footer-static-top">
