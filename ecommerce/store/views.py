@@ -19,6 +19,11 @@ import secrets
 
 # @csrf_exempt
 # Create your views here.
+from django.core.paginator import Paginator
+from django.shortcuts import get_object_or_404, render
+from .models import Categorie, Product
+
+
 def index(request):
     data = cartData(request)
     customer = None
@@ -54,10 +59,10 @@ def index(request):
         "order": order,
         "items": items,
         "categories": categories,
-        "products": products,
         "page_obj_products": page_obj_products,
         "selected_category": selected_category,
-        "customer": customer,  # include customer in the context
+        "customer": customer,
+        "products": page_obj_products,
     }
     return render(request, "store/index.html", context)
 
@@ -66,8 +71,12 @@ def get_products(request):
     category_slug = request.GET.get("category")
     category = get_object_or_404(Categorie, slug=category_slug)
     products = Product.objects.filter(category=category)
+    paginator_products = Paginator(products, 9)
+    page_number_products = request.GET.get("product_page")
+    page_obj_products = paginator_products.get_page(page_number_products)
     context = {
-        "products": products,
+        "products": page_obj_products,
+        "page_obj_products": page_obj_products,
     }
     return render(request, "category_products/products.html", context)
 

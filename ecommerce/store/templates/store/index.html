@@ -97,54 +97,10 @@
                 </div>
             </div>
         </div>
+            
+        {% include "category_products/products.html" %}
 
-        <div class="shop-products-wrapper">
-            <div class="tab-content">
-                    <div id="li-new-product-{{ selected_category.slug }}" class="tab-pane fade active show" role="tabpanel">
-                        <div class="product-area shop-product-area">
-                            <div class="row" id="products-section">
-                                {% include "category_products/products.html" %}
-                            </div>
-                        </div>
-                        <div class="pagination">
-                            <span class="step-links">
-                                {% if page_obj_products.has_previous %}
-                                    <a href="?product_page={{ page_obj_products.previous_page_number }}{% if selected_category %}&category={{selected_category.slug}}{% endif %}" class="previous-page">&laquo;</a>
-                                {% endif %}
-
-                                <span class="current-page">
-                                    Page {{ page_obj_products.number }} of {{ page_obj_products.paginator.num_pages }}
-                                </span>
-
-                                {% if page_obj_products.has_next %}
-                                    <a href="?product_page={{ page_obj_products.next_page_number }}{% if selected_category %}&category={{selected_category.slug}}{% endif %}" class="next-page">&raquo;</a>
-                                {% endif %}
-                            </span>
-                        </div>
-                    </div>
-            </div>
-        </div>
     </div>
 </div>
 
 {% endblock content %}
-
-{% comment %}
-<div class="row">
-    {%for product in products%}
-    <div class="col-lg-3">
-        <img class="thumbnail" src="{{product.ImageURL}}" />
-        <div class="box-element product">
-            <h6><strong>{{product.name}}</strong></h6>
-            <hr />
-            <button data-action="add" data-product="{{product.id}}"
-                class="btn btn-outline-secondary add-btn update-cart">
-                Add to Cart
-            </button>
-            <h4 style="display: inline; float: right">
-                ₦{{product.price|floatformat:2}}
-            </h4>
-        </div>
-    </div>
-    {%endfor%}
-</div> {% endcomment %}

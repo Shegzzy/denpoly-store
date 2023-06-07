@@ -46,6 +46,7 @@ function addCookieItem(productId, action) {
         } else {
             cart[productId]['quantity'] += 1;
         }
+        showPopupMessage('Item added to cart');
     }
     if (action === 'remove') {
         cart[productId]['quantity'] -= 1;
@@ -54,16 +55,17 @@ function addCookieItem(productId, action) {
             console.log('Item removed');
             delete cart[productId];
             removeCartItem(productId);
+            showPopupMessage('Item removed from cart');
 
         }
+
     }
 
     if (action === 'delete') {
         cart[productId]['quantity'] = 0;
         delete cart[productId];
         deleteCartItem(productId);
-
-        // Remove the item from the DOM
+        showPopupMessage('Item deleted from cart');
     }
 
 
@@ -249,50 +251,52 @@ function deleteCartItem(productId) {
         });
 }
 // Get the category slug
-$(document).ready(function () {
-    // Function to handle tab switching
-    $('#categories-tab').on('click', '.category-link', function (e) {
-        e.preventDefault();  // Prevent the default link behavior
+// $(document).ready(function () {
+// Function to handle tab switching
+$('#categories-tab').on('click', '.category-link', function (e) {
+    e.preventDefault();  // Prevent the default link behavior
 
-        // Remove the 'active' class from all category links
-        $('.category-link').removeClass('active');
+    // Remove the 'active' class from all category links
+    $('.category-link').removeClass('active');
 
-        // Add the 'active' class to the clicked category link
-        $(this).addClass('active');
+    // Add the 'active' class to the clicked category link
+    $(this).addClass('active');
 
-        // Get the target tab ID from the data attribute
-        var targetTabId = $(this).data('target');
+    // Get the target tab ID from the data attribute
+    var targetTabId = $(this).data('target');
 
-        // Hide all tab panes
-        $('.tab-pane').removeClass('active');
-        $('.tab-pane').css('opacity', 0);
+    // Hide all tab panes
+    $('.tab-pane').removeClass('active');
+    $('.tab-pane').css('opacity', 0);
 
-        // Show the target tab pane with animation
-        $(targetTabId).addClass('active');
-        setTimeout(function () {
-            $(targetTabId).css('opacity', 1);
-        }, 50);
+    // Show the target tab pane with animation
+    $(targetTabId).addClass('active');
+    setTimeout(function () {
+        $(targetTabId).css('opacity', 1);
+    }, 50);
 
-        // Hide the product section with animation
-        $('#products-section').removeClass('show');
+    // Hide the product section with animation
+    $('#products-section').removeClass('show');
 
-        // Fetch and replace the product data for the selected category
-        var categorySlug = $(this).attr('href').split('=')[1];
-        var url = '/get-products/?category=' + categorySlug;
+    // Fetch and replace the product data for the selected category
+    var categorySlug = $(this).attr('href').split('=')[1];
+    var url = '/get-products/?category=' + categorySlug;
 
-        $.ajax({
-            url: url,
-            type: 'GET',
-            success: function (data) {
-                $('#products-section').html(data);
-                addUpdateCartListeners()
-            },
-            error: function (xhr, textStatus, errorThrown) {
-                console.log('Error:', errorThrown);
-            }
-        });
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function (data) {
+            $('#products-section').html($(data).find('#products-section').html());
+            addUpdateCartListeners();
+
+            $('.pagination').html($(data).find('.pagination').html());
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            console.log('Error:', errorThrown);
+        }
     });
 });
+
 
 function showPopupMessage(message) {
     console.log('Showing popup message');
