@@ -5,6 +5,8 @@ from django.urls import reverse
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.http import JsonResponse
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 import json
 import requests
 from django.conf import settings
@@ -13,9 +15,7 @@ from .util import cookieCart, cartData, guestOder
 from django.http import JsonResponse
 import secrets
 
-
 # from django.views.decorators.csrf import csrf_exempt
-
 
 # @csrf_exempt
 # Create your views here.
@@ -25,6 +25,7 @@ from .models import Categorie, Product
 
 
 def index(request):
+    page = "index"
     data = cartData(request)
     customer = None
     if request.user.is_authenticated:
@@ -63,6 +64,7 @@ def index(request):
         "selected_category": selected_category,
         "customer": customer,
         "products": page_obj_products,
+        "page": page,
     }
     return render(request, "store/index.html", context)
 
@@ -120,6 +122,38 @@ def register(request):
     return render(request, "registration/login-register.html")
 
 
+def contact_page(request):
+    data = cartData(request)
+    cartItems = data["cartItems"]
+    order = data["order"]
+    items = data["items"]
+    categories = Categorie.objects.all()
+
+    context = {
+        "items": items,
+        "order": order,
+        "cartItems": cartItems,
+        "categories": categories,
+    }
+    if request.method == "POST":
+        name = request.POST["name"]
+        email = request.POST["email"]
+        subject = request.POST["subject"]
+        message = request.POST["message"]
+
+        email = EmailMessage(
+            subject,
+            f"Name: {name}\nEmail: {email}\nMessage: {message}",
+            settings.EMAIL_HOST_USER,
+            ["michhubs@gmail.com"],
+        )
+        email.fail_silently = False
+        email.send()
+        return render(request, "email/email_sent.html")
+
+    return render(request, "store/contact_us.html", context)
+
+
 def user_login(request):
     page = "login"
     context = {"page": page}
@@ -160,8 +194,14 @@ def cart(request):
     cartItems = data["cartItems"]
     order = data["order"]
     items = data["items"]
+    categories = Categorie.objects.all()
 
-    context = {"items": items, "order": order, "cartItems": cartItems}
+    context = {
+        "items": items,
+        "order": order,
+        "cartItems": cartItems,
+        "categories": categories,
+    }
     return render(request, "store/cart.html", context)
 
 
@@ -170,8 +210,14 @@ def aboutUs(request):
     cartItems = data["cartItems"]
     order = data["order"]
     items = data["items"]
+    categories = Categorie.objects.all()
 
-    context = {"items": items, "order": order, "cartItems": cartItems}
+    context = {
+        "items": items,
+        "order": order,
+        "cartItems": cartItems,
+        "categories": categories,
+    }
     return render(request, "store/about_us.html", context)
 
 

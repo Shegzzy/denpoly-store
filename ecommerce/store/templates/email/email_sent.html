@@ -1,0 +1,11 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+  <div class="page-wrapper s1">
+    <div id="success-box" class="content-block">
+        <h1>Thanks For Reaching Out!</h1>
+        <h6>Your message was <strong>sent successfully...</strong> we'll do our best to reach back ASAP</h6>
+        <a id="back-btn" class="btn btn-success" href="{% url 'index' %}">BACK TO HOME</a>
+    </div>
+  </div>
+{% endblock content %}

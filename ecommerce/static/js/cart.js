@@ -250,8 +250,7 @@ function deleteCartItem(productId) {
             console.error('Error:', error);
         });
 }
-// Get the category slug
-// $(document).ready(function () {
+
 // Function to handle tab switching
 $('#categories-tab').on('click', '.category-link', function (e) {
     e.preventDefault();  // Prevent the default link behavior
@@ -296,6 +295,30 @@ $('#categories-tab').on('click', '.category-link', function (e) {
         }
     });
 });
+
+$(document).on('click', '.pagination .previous-page, .pagination .next-page', function (e) {
+    e.preventDefault();  // Prevent the default link behavior
+
+    var url = $(this).attr('href');
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function (data) {
+            $('#products-section').html($(data).find('#products-section').html());
+            addUpdateCartListeners();
+
+            $('.pagination').html($(data).find('.pagination').html());
+
+            // Scroll to the top of the products section
+            $('html, body').animate({ scrollTop: $('#products-section').offset().top }, 'slow');
+        },
+        error: function (xhr, textStatus, errorThrown) {
+            console.log('Error:', errorThrown);
+        }
+    });
+});
+
 
 
 function showPopupMessage(message) {
