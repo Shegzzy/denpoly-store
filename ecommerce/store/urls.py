@@ -16,7 +16,7 @@ urlpatterns = [
     path("process_order/", views.processOrder, name="process_order"),
     path("paystack_verify/", views.verifyPayment, name="paystack_verify"),
     path(
-        "product_details/<int:product_id>/",
+        "product_details/<slug:slug>/",
         views.productDetails,
         name="product_details",
     ),

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.text import slugify
 
 # Create your models here.
 
@@ -41,6 +42,7 @@ class Product(models.Model):
     image = models.ImageField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
+    colors = models.CharField(max_length=200, null=True)
     slug = models.SlugField(unique=True, null=True)
 
     class Meta:
@@ -56,6 +58,11 @@ class Product(models.Model):
         except:
             url = ""
         return url
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(Product, self).save(*args, **kwargs)
 
 
 class Order(models.Model):

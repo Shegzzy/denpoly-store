@@ -15,9 +15,9 @@ from .util import cookieCart, cartData, guestOder
 from django.http import JsonResponse
 import secrets
 
-# from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt
 
-# @csrf_exempt
+
 # Create your views here.
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
@@ -221,18 +221,20 @@ def aboutUs(request):
     return render(request, "store/about_us.html", context)
 
 
-def productDetails(request, product_id):
+def productDetails(request, slug):
     data = cartData(request)
-    product = get_object_or_404(Product, id=product_id)
+    product = get_object_or_404(Product, slug=slug)
     cartItems = data["cartItems"]
     order = data["order"]
     items = data["items"]
+    categories = Categorie.objects.all()
 
     context = {
         "items": items,
         "order": order,
         "cartItems": cartItems,
         "product": product,
+        "categories": categories,
     }
     return render(request, "store/single-product.html", context)
 
@@ -242,16 +244,19 @@ def checkout(request):
     cartItems = data["cartItems"]
     order = data["order"]
     items = data["items"]
+    categories = Categorie.objects.all()
     paystack_public_key = settings.PAYSTACK_PUBLIC_KEY
     context = {
         "items": items,
         "order": order,
         "cartItems": cartItems,
         "paystack_public_key": paystack_public_key,
+        "categories": categories,
     }
     return render(request, "store/checkout.html", context)
 
 
+@csrf_exempt
 def cart_data(request):
     data = cartData(request)
     cartItems = data["cartItems"]
@@ -260,6 +265,7 @@ def cart_data(request):
     mini_cart_html = render(
         request, "mini_cart/mini_cart.html", {"items": items, "order": order}
     ).content.decode("utf-8")
+
     # Serialize the cart data into JSON format
     response_data = {
         "miniCartHTML": mini_cart_html,

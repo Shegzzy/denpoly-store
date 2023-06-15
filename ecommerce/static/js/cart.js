@@ -226,7 +226,6 @@ function removeCartItems(productId) {
 
 function deleteCartItem(productId) {
     var url = user === 'AnonymousUser' ? '/cart_data/' : '/update_item/';
-
     fetch(url, {
         method: 'POST',
         headers: {

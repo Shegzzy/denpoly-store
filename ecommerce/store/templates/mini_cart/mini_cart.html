@@ -2,12 +2,12 @@
 <ul class="minicart-product-list">
     {% for item in items %}
     <li id="item-container-{{item.product.id}}">
-        <a href="{% url 'product_details' item.product.id %}" class="minicart-product-image">
+        <a href="{% url 'product_details' item.product.slug %}" class="minicart-product-image">
             <img src="{{item.product.ImageURL}}" alt="cart products" />
         </a>
         <div class="minicart-product-details">
             <h6>
-                <a href="{% url 'product_details' item.product.id %}">{{item.product.name}}</a>
+                <a href="{% url 'product_details' item.product.slug %}">{{item.product.name}}</a>
             </h6>
             <span> ₦{{item.product.price}} </span>
             x

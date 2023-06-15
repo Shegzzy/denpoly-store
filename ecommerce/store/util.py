@@ -25,6 +25,7 @@ def cookieCart(request):
             item = {
                 "product": {
                     "id": product.id,
+                    "slug": product.slug,
                     "name": product.name,
                     "price": product.price,
                     "ImageURL": product.ImageURL,
